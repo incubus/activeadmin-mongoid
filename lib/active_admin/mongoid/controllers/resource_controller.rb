@@ -22,5 +22,18 @@ ActiveAdmin::Engine.config.to_prepare do
         *resource_params
       )
     end
+
+    # Active Admin 3 wraps the update in ActiveRecord::Base.transaction and rolls it back with ActiveRecord::Rollback.
+    # A Mongoid document is updated by a single write, so there is nothing to roll back.
+    def update_resource(object, attributes)
+      status = nil
+      object = assign_attributes(object, attributes)
+
+      run_update_callbacks object do
+        status = save_resource(object)
+      end
+
+      status
+    end
   end
 end

@@ -11,4 +11,13 @@ Mongoid::Association::Relatable.module_eval do
     return if embeds?
     foreign_key.to_sym rescue nil
   end
+
+  # Active Admin 3 asks the association for the things below, which only exist on Active Record reflections.
+  def has_cached_counter?
+    false
+  end
+
+  def association_primary_key
+    :id
+  end
 end
